@@ -8,6 +8,7 @@ namespace PenteGame.Models
 {
     public class Piece
     {
+        //may change to enum value since color isnt viable
         public Color value;
         //TO DO add owned player
         //TO DO add isActive
