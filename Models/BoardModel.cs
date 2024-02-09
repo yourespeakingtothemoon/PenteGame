@@ -18,9 +18,8 @@ namespace PenteGame.Models
             {
                 for (int j = 0; j < 19; j++)
                 {
-                    board[i, j].x = i;
-                    board[i, j].y = j;
-                    board[i, j].value = 0;
+                   
+                   //TODO Logic to set the board
                 }
             }
            
