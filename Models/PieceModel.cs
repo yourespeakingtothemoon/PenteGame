@@ -12,7 +12,7 @@ namespace PenteGame.Models
         private static int nextID = 0;
         public int? id { get; set; } = nextID++;
 
-        public string image ="";
+        public string image ="/Content/Images/empty.png";
 
         public int x { get; set; }
         public int y { get; set; }

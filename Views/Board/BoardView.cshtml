@@ -39,13 +39,14 @@
                 {
                     <tr>
                         
-                        @for (int j = 0; j < 19; j++)
+                        @for (int j = -1; j < 19; j++)
                         {
 
-                            if (j == 0)
+                            if (j < 0)
                             {
-<td>
-                                    @i
+                                int r = i + 1;
+                                <td>
+                                    @r
                                 </td>
                             }
 
@@ -60,3 +61,9 @@
                         }
                     </tr>
                 }
+
+                </table>
+            </div>
+</div>
+</div>
+```

@@ -68,10 +68,39 @@ namespace PenteGame.Controllers
             return View("BoardView", board);
         }
 
+       public void pieceClicked(Object sender, EventArgs e)
+        {
+            var pieceId = sender.GetType().GetProperty("id").GetValue(sender, null);
+            var piece = board.findPieceById((int)pieceId);
 
-        // fun logic stuff
 
-        public void CheckBoard()
+            //for now we will just turn the piece red
+            if (piece.image == "/Content/Images/empty.png")
+            {
+                if(newPiece.image == "/Content/Images/red.png")
+                {
+                    piece.image = "/Content/Images/blue.png";
+                }
+                else
+                {
+                    piece.image = "/Content/Images/red.png";
+                    
+                }
+
+                
+            }
+            else {                 //piece is already taken
+                                   }
+
+            UpdateBoard(piece);
+
+            //return View("board", "board");
+        }
+
+
+            // fun logic stuff
+
+            public void CheckBoard()
         {
 
             if (CheckCaptures() || CheckFiveinRow())

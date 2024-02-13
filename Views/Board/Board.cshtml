@@ -1,0 +1,84 @@
+﻿@model PenteGame.Models.BoardModel
+
+@{
+    ViewBag.Title = "Board";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2> Game Info</h2>
+<p>Player 1: insert model info here</p>
+<p>Player 2: insert model info here</p>
+            <p>Turn: insert model info here</p>
+<p>Winner: insert model info here</p>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="container
+">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-borderless" cellpadding="0">
+                <tr padding="0">
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
+                    <td>16</td>
+                    <td>17</td>
+                    <td>18</td>
+                    <td>19</td>
+
+                </tr>
+                @for (int i = 0; i < 19; i++)
+                {
+                   <tr padding="0">
+
+                       @for (int j = -1; j < 19; j++)
+                       {
+
+                           if (j < 0)
+                           {
+                               int r = i + 1;
+                               <td>
+                                   @r
+                               </td>
+                           }
+
+
+                           else
+                           {
+                               <td>
+                                   @Html.Partial("Piece", Model.board[i, j])
+                               </td>
+                           }
+
+
+                       }
+                   </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+```
