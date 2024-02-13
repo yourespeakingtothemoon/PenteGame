@@ -12,6 +12,8 @@ namespace PenteGame.Models
         private static int nextID = 0;
         public int? id { get; set; } = nextID++;
 
+        public string image ="";
+
         public int x { get; set; }
         public int y { get; set; }
 
@@ -26,11 +28,6 @@ namespace PenteGame.Models
 
         }
 
-        public PieceModel(Color value, PlayerModel ownedPlayer, bool isActive)
-        {
-            this.value = value;
-            this.ownedPlayer = ownedPlayer;
-            this.isActive = isActive;
-        }
+      
     }
 }

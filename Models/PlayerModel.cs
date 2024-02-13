@@ -25,12 +25,6 @@ namespace PenteGame.Models
         {
         }
 
-        public PlayerModel(string name, Color value, bool hasWon, bool isTurn)
-        {
-            Name = name;
-            this.value = value;
-            this.hasWon = hasWon;
-            this.isTurn = isTurn;
-        }
+      
     }
 }

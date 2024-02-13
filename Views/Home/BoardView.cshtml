@@ -1,2 +1,62 @@
 ﻿@model PenteGame.Models.BoardModel
 
+
+@{
+    ViewBag.Title = "BoardView";
+}
+
+<h2>Board</h2>
+
+<div class="container
+">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <tr>
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
+                    <td>16</td>
+                    <td>17</td>
+                    <td>18</td>
+                    <td>19</td>
+
+                </tr>
+                @for (int i = 0; i < 19; i++)
+                {
+                    <tr>
+                        
+                        @for (int j = 0; j < 19; j++)
+                        {
+
+                            if (j == 0)
+                            {
+<td>
+                                    @i
+                                </td>
+                            }
+
+
+                            else{
+                    <td>
+                        @Html.Partial("Piece", Model.board[i, j])
+                    </td>
+                            }
+
+
+                        }
+                    </tr>
+                }

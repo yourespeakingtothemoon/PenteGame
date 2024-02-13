@@ -26,5 +26,12 @@ namespace PenteGame.Controllers
 
             return View();
         }
+
+       public ActionResult BoardView()
+        {            
+            return View();   
+        }
+
+        
     }
 }
