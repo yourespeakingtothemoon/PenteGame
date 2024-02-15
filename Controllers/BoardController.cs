@@ -43,13 +43,15 @@ namespace PenteGame.Controllers
         [HttpPost]
         public ActionResult Index(string P1Name, string P1colorValue, string P2Name,string P2colorValue)
         {
+            //would be easier: board.players.Add(PlayerModel(P1Name,P1colorValue));
+
             PlayerModel player = new PlayerModel();
             player.Name = P1Name;
-            player.colorValue = P1colorValue == "Black" ? Color.Black : Color.White; //should return Color.Black
+            player.colorValue = P1colorValue.ToLower() == "black" ? Color.Black : Color.White; //should return Color.White
             board.players.Add(player);
 
             player.Name = P2Name;
-            player.colorValue = P2colorValue == "Black" ? Color.Black : Color.White; //should return Color.White
+            player.colorValue = P2colorValue.ToLower() == "black" ? Color.Black : Color.White; //should return Color.Black
             board.players.Add(player);
 
             return RedirectToAction("board", "board");

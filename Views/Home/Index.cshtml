@@ -34,23 +34,25 @@
             StartGame? will need a way to gather the window info and then set the info to each players
         -->
         <form asp-controller="Board" asp-action="Index" method="post">
-            <!-- Player 1 info -->
-            <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-                <h2 id="gettingStartedTitle">Player 1</h2>
-                <label for="P1Name">Player 1 Name:</label>
-                <input type="text" name="P1Name" value="Player 1" />
+            <div>
+                <!-- Player 1 info -->
+                <section class="col-md-4" aria-labelledby="gettingStartedTitle">
+                    <h2 id="gettingStartedTitle">Player 1</h2>
+                    <label for="P1Name">Player 1 Name:</label>
+                    <input type="text" name="P1Name" value="Player 1" />
 
-                <input type="text" hidden id="color-selection" name="P1colorValue" value="white" />
-            </section>
-            <!-- Player 2 Info -->
-            <section class="col-md-4" aria-labelledby="librariesTitle">
-                <h2 id="librariesTitle">Player 2</h2>
-                <label for="P2Name">Player 2 Name:</label>
-                <input type="text" name="P2Name" value="Player 2" />
+                    <input type="text" hidden id="color-selection" name="P1colorValue" value="white" />
+                </section>
+                <!-- Player 2 Info -->
+                <section class="col-md-4" aria-labelledby="librariesTitle">
+                    <h2 id="librariesTitle">Player 2</h2>
+                    <label for="P2Name">Player 2 Name:</label>
+                    <input type="text" name="P2Name" value="Player 2" />
 
-                <input type="text" hidden id="color-selection" name="P2colorValue" value="black" />
-            </section>
-            <button type="submit">Play Game</button>
+                    <input type="text" hidden id="color-selection" name="P2colorValue" value="black" />
+                </section>
+                <button type="submit">Play Game</button>
+            </div>
         </form>
 
     </div>
