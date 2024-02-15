@@ -12,7 +12,6 @@ namespace PenteGame.Controllers
     public class BoardController : Controller
     {
         public BoardModel board = new BoardModel();
-        public List<PlayerModel> players = new List<PlayerModel> { };
         private PieceModel newPiece;
 
         int turn;
@@ -23,12 +22,25 @@ namespace PenteGame.Controllers
             return View(board);
         }
 
+        public ActionResult Index(PlayerModel player)
+        {
+            board.players.Add(player);
+            return RedirectToAction("board", "board");
+        }
+
+        public ActionResult Index(PlayerModel player, PlayerModel player2)
+        {
+            board.players.Add(player);
+            board.players.Add(player2);
+            return RedirectToAction("board", "board");
+        }
+
         public ActionResult StartGame(int numOfPlayers)
         {
             for (int i = 0; i < numOfPlayers; i++)
             {
                 PlayerModel player = new PlayerModel();
-                players.Add(player);
+                board.players.Add(player);
             }
             return View("board", "board");
 
@@ -108,7 +120,7 @@ namespace PenteGame.Controllers
                 //win   
 
 
-                foreach (var player in players)
+                foreach (var player in board.players)
                 {
                     if (player.hasWon)
                     {
