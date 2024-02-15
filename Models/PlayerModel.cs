@@ -19,12 +19,18 @@ namespace PenteGame.Models
 
         public bool hasWon { get; set; } = false;
 
-        public bool isTurn { get; set; }
+        //public bool isTurn { get; set; }
 
         public PlayerModel()
         {
         }
 
-      
+        public PlayerModel(string name, int captured, Color colorValue, bool hasWon)
+        {
+            Name = name;
+            this.captured = captured;
+            this.colorValue = colorValue;
+            this.hasWon = hasWon;
+        }
     }
 }

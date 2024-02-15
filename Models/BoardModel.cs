@@ -12,6 +12,7 @@ namespace PenteGame.Models
     {
 
         public PieceModel[,] board { get; set; } = new PieceModel[19, 19];
+        public List<PlayerModel> players = new List<PlayerModel> { };
 
         public BoardModel()
         {
