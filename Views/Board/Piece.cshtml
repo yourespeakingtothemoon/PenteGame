@@ -1,8 +1,9 @@
 ﻿@model PenteGame.Models.PieceModel
-<form asp-action="pieceClicked" asp-controller="Board">
 
-    <img src=@Model.image />
-    <input id="@Model.id" type="submit">
-  
 
-</form>
+
+
+    <a id="@Model.id" href="@Url.Action("pieceClicked","Board")">
+        <img src=@Model.image />
+    </a>
+

@@ -70,29 +70,29 @@ namespace PenteGame.Controllers
 
        public void pieceClicked(Object sender, EventArgs e)
         {
-            var pieceId = sender.GetType().GetProperty("id").GetValue(sender, null);
-            var piece = board.findPieceById((int)pieceId);
-
+           var x = Request.UrlReferrer.GetType();
+            // var piece = board.findPieceById((int)pieceId);
+         //   var y = 2;
 
             //for now we will just turn the piece red
-            if (piece.image == "/Content/Images/empty.png")
-            {
-                if(newPiece.image == "/Content/Images/red.png")
-                {
-                    piece.image = "/Content/Images/blue.png";
-                }
-                else
-                {
-                    piece.image = "/Content/Images/red.png";
+            //if (piece.image == "/Content/Images/empty.png")
+            //{
+            //    if(newPiece.image == "/Content/Images/red.png")
+            //    {
+            //        piece.image = "/Content/Images/blue.png";
+            //    }
+            //    else
+            //    {
+            //        piece.image = "/Content/Images/red.png";
                     
-                }
+            //    }
 
                 
-            }
-            else {                 //piece is already taken
-                                   }
+            //}
+            //else {                 //piece is already taken
+            //                       }
 
-            UpdateBoard(piece);
+            //UpdateBoard(piece);
 
             //return View("board", "board");
         }
