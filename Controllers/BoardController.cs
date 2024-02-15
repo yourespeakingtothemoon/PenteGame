@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
+using System.Drawing;
 using System.Web.Mvc;
 
 namespace PenteGame.Controllers
@@ -22,16 +23,35 @@ namespace PenteGame.Controllers
             return View(board);
         }
 
-        public ActionResult Index(PlayerModel player)
-        {
-            board.players.Add(player);
-            return RedirectToAction("board", "board");
-        }
+       #region Index_NON_WORKING
+        //[HttpPost]
+        //public ActionResult Index(PlayerModel player)
+        //{
+        //    board.players.Add(player);
+        //    return RedirectToAction("board", "board");
+        //}
 
-        public ActionResult Index(PlayerModel player, PlayerModel player2)
+        //[HttpPost]
+        //public ActionResult Index(PlayerModel player, PlayerModel player2)
+        //{
+        //    board.players.Add(player);
+        //    board.players.Add(player2);
+        //    return RedirectToAction("board", "board");
+        //}
+        #endregion
+
+        [HttpPost]
+        public ActionResult Index(string P1Name, string P1colorValue, string P2Name,string P2colorValue)
         {
+            PlayerModel player = new PlayerModel();
+            player.Name = P1Name;
+            player.colorValue = P1colorValue == "Black" ? Color.Black : Color.White; //should return Color.Black
             board.players.Add(player);
-            board.players.Add(player2);
+
+            player.Name = P2Name;
+            player.colorValue = P2colorValue == "Black" ? Color.Black : Color.White; //should return Color.White
+            board.players.Add(player);
+
             return RedirectToAction("board", "board");
         }
 
