@@ -3,7 +3,14 @@
 
 
 
-    <a id="@Model.id" href="@Url.Action("pieceClicked","Board")">
+<form method="Post" action="pieceClicked" controller="Board">
+    <input type="hidden" name="pieceX" value="@Model.x" />
+    <input type="hidden" name="pieceY" value="@Model.y" />
+    <button type="submit">
         <img src=@Model.image />
-    </a>
+    </button>
+
+</form>
+        
+ 
 

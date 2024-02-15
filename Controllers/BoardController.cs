@@ -55,7 +55,7 @@ namespace PenteGame.Controllers
         {
             board.board[piece.x, piece.y] = piece;
             newPiece = piece;
-            return RedirectToAction("board", "board");
+            return RedirectToAction("Board", "Board");
         }
 
         public ActionResult DeleteBoard()
@@ -80,33 +80,42 @@ namespace PenteGame.Controllers
             return View("BoardView", board);
         }
 
-       public void pieceClicked(Object sender, EventArgs e)
+        [HttpPost]
+       public ActionResult pieceClicked(Object sender, EventArgs e)
         {
-           var x = Request.UrlReferrer.GetType();
-            // var piece = board.findPieceById((int)pieceId);
-         //   var y = 2;
 
-            //for now we will just turn the piece red
-            //if (piece.image == "/Content/Images/empty.png")
-            //{
-            //    if(newPiece.image == "/Content/Images/red.png")
-            //    {
-            //        piece.image = "/Content/Images/blue.png";
-            //    }
-            //    else
-            //    {
-            //        piece.image = "/Content/Images/red.png";
-                    
-            //    }
+            var x = Convert.ToInt32(Request.Form["pieceX"]);
+            var y = Convert.ToInt32(Request.Form["pieceY"]);
+            var piece = board.findPieceByCoords(x, y);
 
-                
-            //}
-            //else {                 //piece is already taken
-            //                       }
 
-            //UpdateBoard(piece);
+           // for now we will just turn the piece red
+            if (piece.image == "/Content/Images/empty.png")
+                {
+                if (newPiece == null)
+                {
+                    piece.image = "/Content/Images/red.png";
+                }
+                else
+                {
+                    if (newPiece.image == "/Content/Images/red.png")
+                    {
+                        piece.image = "/Content/Images/blue.png";
+                    }
+                    else
+                    {
+                        piece.image = "/Content/Images/red.png";
 
-            //return View("board", "board");
+                    }
+                }
+                }
+                else
+                {                 //piece is already taken
+                }
+
+           // UpdateBoard(piece);
+           newPiece = piece;
+            return View("BoardView", board);
         }
 
 
