@@ -28,6 +28,13 @@ namespace PenteGame.Controllers
             return RedirectToAction("board", "board");
         }
 
+        public ActionResult Index(PlayerModel player, PlayerModel player2)
+        {
+            board.players.Add(player);
+            board.players.Add(player2);
+            return RedirectToAction("board", "board");
+        }
+
         public ActionResult StartGame(int numOfPlayers)
         {
             for (int i = 0; i < numOfPlayers; i++)
