@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
+using System.Drawing;
 using System.Web.Mvc;
 
 namespace PenteGame.Controllers
@@ -22,16 +23,37 @@ namespace PenteGame.Controllers
             return View(board);
         }
 
-        public ActionResult Index(PlayerModel player)
-        {
-            board.players.Add(player);
-            return RedirectToAction("board", "board");
-        }
+       #region Index_NON_WORKING
+        //[HttpPost]
+        //public ActionResult Index(PlayerModel player)
+        //{
+        //    board.players.Add(player);
+        //    return RedirectToAction("board", "board");
+        //}
 
-        public ActionResult Index(PlayerModel player, PlayerModel player2)
+        //[HttpPost]
+        //public ActionResult Index(PlayerModel player, PlayerModel player2)
+        //{
+        //    board.players.Add(player);
+        //    board.players.Add(player2);
+        //    return RedirectToAction("board", "board");
+        //}
+        #endregion
+
+        [HttpPost]
+        public ActionResult Index(string P1Name, string P1colorValue, string P2Name,string P2colorValue)
         {
+            //would be easier: board.players.Add(PlayerModel(P1Name,P1colorValue));
+
+            PlayerModel player = new PlayerModel();
+            player.Name = P1Name;
+            player.colorValue = P1colorValue.ToLower() == "black" ? Color.Black : Color.White; //should return Color.White
             board.players.Add(player);
-            board.players.Add(player2);
+
+            player.Name = P2Name;
+            player.colorValue = P2colorValue.ToLower() == "black" ? Color.Black : Color.White; //should return Color.Black
+            board.players.Add(player);
+
             return RedirectToAction("board", "board");
         }
 
@@ -55,7 +77,7 @@ namespace PenteGame.Controllers
         {
             board.board[piece.x, piece.y] = piece;
             newPiece = piece;
-            return RedirectToAction("board", "board");
+            return RedirectToAction("Board", "Board");
         }
 
         public ActionResult DeleteBoard()
@@ -80,33 +102,42 @@ namespace PenteGame.Controllers
             return View("BoardView", board);
         }
 
-       public void pieceClicked(Object sender, EventArgs e)
+        [HttpPost]
+       public ActionResult pieceClicked(Object sender, EventArgs e)
         {
-            var pieceId = sender.GetType().GetProperty("id").GetValue(sender, null);
-            var piece = board.findPieceById((int)pieceId);
+
+            var x = Convert.ToInt32(Request.Form["pieceX"]);
+            var y = Convert.ToInt32(Request.Form["pieceY"]);
+            var piece = board.findPieceByCoords(x, y);
 
 
-            //for now we will just turn the piece red
+           // for now we will just turn the piece red
             if (piece.image == "/Content/Images/empty.png")
-            {
-                if(newPiece.image == "/Content/Images/red.png")
                 {
-                    piece.image = "/Content/Images/blue.png";
+                if (newPiece == null)
+                {
+                    piece.image = "/Content/Images/red.png";
                 }
                 else
                 {
-                    piece.image = "/Content/Images/red.png";
-                    
+                    if (newPiece.image == "/Content/Images/red.png")
+                    {
+                        piece.image = "/Content/Images/blue.png";
+                    }
+                    else
+                    {
+                        piece.image = "/Content/Images/red.png";
+
+                    }
+                }
+                }
+                else
+                {                 //piece is already taken
                 }
 
-                
-            }
-            else {                 //piece is already taken
-                                   }
-
-            UpdateBoard(piece);
-
-            //return View("board", "board");
+           // UpdateBoard(piece);
+           newPiece = piece;
+            return View("BoardView", board);
         }
 
 

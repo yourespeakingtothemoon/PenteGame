@@ -1,8 +1,16 @@
 ﻿@model PenteGame.Models.PieceModel
-<form asp-action="pieceClicked" asp-controller="Board">
 
-    <img src=@Model.image />
-    <input id="@Model.id" type="submit">
-  
+
+
+
+<form method="Post" action="pieceClicked" controller="Board">
+    <input type="hidden" name="pieceX" value="@Model.x" />
+    <input type="hidden" name="pieceY" value="@Model.y" />
+    <button type="submit">
+        <img src=@Model.image />
+    </button>
 
 </form>
+        
+ 
+

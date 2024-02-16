@@ -47,5 +47,10 @@ namespace PenteGame.Models
             }
             return null;
         }
+
+        public PieceModel findPieceByCoords(int x, int y)
+        {
+            return board[x, y];
+        }
     }
 }
