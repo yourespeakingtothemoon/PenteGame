@@ -68,7 +68,7 @@ namespace PenteGame.Controllers
 
         }
 
-        public ActionResult Board(BoardModel board)
+        public ActionResult Board()
         {
             return View(board);
         }
@@ -86,11 +86,13 @@ namespace PenteGame.Controllers
             return RedirectToAction("board", "board");
         }
 
+        [HttpGet]
         public ActionResult AddBoard()
         {
             return View();
         }
 
+        [HttpPost]
         public ActionResult AddBoard(BoardModel boardboy)
         {
             board = boardboy;
