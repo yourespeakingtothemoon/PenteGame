@@ -11,7 +11,7 @@ namespace PenteGame.Controllers
 {
     public class BoardController : Controller
     {
-        public BoardModel board = new BoardModel();
+        static public BoardModel board = new BoardModel();
         private PieceModel newPiece;
 
         int turn;
@@ -69,9 +69,9 @@ namespace PenteGame.Controllers
             return View();
         }
 
-        public ActionResult AddBoard(BoardModel board)
+        public ActionResult AddBoard(BoardModel boardboy)
         {
-            this.board = board;
+            board = boardboy;
             return RedirectToAction("board", "board");
         }
 
