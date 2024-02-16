@@ -25,7 +25,7 @@ namespace PenteGame.Models
         {
         }
 
-        public PlayerModel(string name, int captured, Color colorValue, bool hasWon)
+        public PlayerModel(string name, Color colorValue, int captured = 0, bool hasWon = false)
         {
             Name = name;
             this.captured = captured;
