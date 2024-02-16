@@ -20,10 +20,10 @@ namespace PenteGame.Controllers
         // fun html stuff
         public ActionResult Index()
         {
-            return View(board);
+            return View();
         }
 
-       #region Index_NON_WORKING
+        #region Index_NON_WORKING
         //[HttpPost]
         //public ActionResult Index(PlayerModel player)
         //{
@@ -54,7 +54,7 @@ namespace PenteGame.Controllers
             player.colorValue = P2colorValue.ToLower() == "black" ? Color.Black : Color.White; //should return Color.Black
             board.players.Add(player);
 
-            return RedirectToAction("board", "board");
+            return RedirectToAction("Board", board);
         }
 
         public ActionResult StartGame(int numOfPlayers)
@@ -110,16 +110,16 @@ namespace PenteGame.Controllers
 
             var x = Convert.ToInt32(Request.Form["pieceX"]);
             var y = Convert.ToInt32(Request.Form["pieceY"]);
-            //var piece = board.findPieceByCoords(x, y);
+            var piece = board.findPieceByCoords(x, y);
 
-            PieceModel piece = new PieceModel(x,y);
+           // PieceModel piece = new PieceModel(x,y);
            // for now we will just turn the piece red
-            if (piece.image == "/Content/Images/empty.png")
-                {
-                if (newPiece != null)
+           if (piece.image == "/Content/Images/empty.png")
+               {
+                if (board.lastPiece != null)
                 {
 
-                    if (newPiece.image == "/Content/Images/red.png")
+                    if (board.lastPiece.image == "/Content/Images/red.png")
                     {
                         piece.image = "/Content/Images/blue.png";
                     }
@@ -129,19 +129,20 @@ namespace PenteGame.Controllers
 
                     }
                 }
-            else
+                else
                 {
                         piece.image = "/Content/Images/red.png";
-                    }
-                
                 }
-                else
-                {                 //piece is already taken
-                }
+               }
+             else
+               {
+             return RedirectToAction("Board", board);//piece is already taken
+               }
 
            // UpdateBoard(piece);
-           newPiece = piece;
-           return RedirectToAction("UpdateBoard", newPiece);
+          board.lastPiece = piece;
+            board.board[x, y] = piece;
+           return RedirectToAction("Board", board);
         }
 
 
