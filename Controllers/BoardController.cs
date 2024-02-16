@@ -77,7 +77,7 @@ namespace PenteGame.Controllers
         {
             board.board[piece.x, piece.y] = piece;
             newPiece = piece;
-            return RedirectToAction("Board", "Board");
+            return View("BoardView", board);
         }
 
         public ActionResult DeleteBoard()
@@ -110,18 +110,15 @@ namespace PenteGame.Controllers
 
             var x = Convert.ToInt32(Request.Form["pieceX"]);
             var y = Convert.ToInt32(Request.Form["pieceY"]);
-            var piece = board.findPieceByCoords(x, y);
+            //var piece = board.findPieceByCoords(x, y);
 
-
+            PieceModel piece = new PieceModel(x,y);
            // for now we will just turn the piece red
             if (piece.image == "/Content/Images/empty.png")
                 {
-                if (newPiece == null)
+                if (newPiece != null)
                 {
-                    piece.image = "/Content/Images/red.png";
-                }
-                else
-                {
+
                     if (newPiece.image == "/Content/Images/red.png")
                     {
                         piece.image = "/Content/Images/blue.png";
@@ -132,6 +129,11 @@ namespace PenteGame.Controllers
 
                     }
                 }
+            else
+                {
+                        piece.image = "/Content/Images/red.png";
+                    }
+                
                 }
                 else
                 {                 //piece is already taken
@@ -139,7 +141,7 @@ namespace PenteGame.Controllers
 
            // UpdateBoard(piece);
            newPiece = piece;
-            return View("BoardView", board);
+           return RedirectToAction("UpdateBoard", newPiece);
         }
 
 
