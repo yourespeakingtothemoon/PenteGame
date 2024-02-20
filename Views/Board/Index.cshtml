@@ -15,11 +15,31 @@
             Welcome to the game of Pente! <br />
 
             <div>
-                <!-- Rules -->
+                <!-- Rules (Taken from Chat GPT, then altered to fit what was needed) -->
                 <!-- Collapsable: https://www.w3schools.com/howto/howto_js_collapsible.asp -->
                 <button type="button" class="collapsible">Rules of the Game</button>
                 <div class="content">
-                    <p>Insert rules here (bullet points?)</p>
+                    <div>
+                        <b>General Info:</b>
+                        <br />
+                        &#8226; The goal is to either capture five pairs of the opponent's stones in a row (called "Pente") or capture a total of ten stones. <br />
+                        &#8226; The game is played on a 19x19 grid.<br />
+                        &#8226; Players use stones of two different colors (commonly black and white).<br />
+                        &#8226; Players take turns placing one stone of their color on an empty intersection of the board and cannot pass their turn.<br />
+                        &#8226; If two stones of one color are placed on either side of two opponent stones in a straight line, the opponent's stones are captured and removed from the board.<br />
+                        &#8226; Capturing is not allowed if it creates a three-in-a-row for the opponent.<br />
+
+                        <br />
+                        <b>End of the Game:</b>
+                        <br />
+                        &#8226; The game ends when a player achieves Pente (five pairs of stones in a row) or captures a total of ten opponent stones.<br />
+                        &#8226; If both players achieve Pente on the same move, the game is a draw.<br />
+
+                        <br /><br />
+                        <a href="https://www.pente.net/instructions.html" target="_blank">More Info on the Rules</a>
+                        <br />
+                        <hr/>
+                    </div>
                 </div>
             </div>
             
@@ -27,12 +47,6 @@
     </section>
 
     <div class="row">
-        <!--
-            
-
-            Need way to input player names and colors (optional) into game
-            StartGame? will need a way to gather the window info and then set the info to each players
-        -->
         <form controller="Board" action="Index" method="Post">
             <div>
                 <!-- Player 1 info -->
@@ -43,6 +57,7 @@
 
                     <input type="text" hidden id="color-selection" name="P1colorValue" value="white" />
                 </section>
+                <br /><br />
                 <!-- Player 2 Info -->
                 <section class="col-md-4" aria-labelledby="librariesTitle">
                     <h2 id="librariesTitle">Player 2</h2>
@@ -51,6 +66,7 @@
 
                     <input type="text" hidden id="color-selection" name="P2colorValue" value="black" />
                 </section>
+                <br /><br />
                 <button type="submit">Play Game</button>
             </div>
         </form>

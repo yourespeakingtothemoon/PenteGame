@@ -45,13 +45,10 @@ namespace PenteGame.Controllers
         {
             //would be easier: board.players.Add(PlayerModel(P1Name,P1colorValue));
 
-            PlayerModel player = new PlayerModel();
-            player.Name = P1Name;
-            player.colorValue = P1colorValue.ToLower() == "black" ? Color.Black : Color.White; //should return Color.White
+            PlayerModel player = new PlayerModel(P1Name, P1colorValue.ToLower() == "black" ? Color.Black : Color.White);//should return Color.White
             board.players.Add(player);
 
-            player.Name = P2Name;
-            player.colorValue = P2colorValue.ToLower() == "black" ? Color.Black : Color.White; //should return Color.Black
+            player = new PlayerModel(P2Name, P2colorValue.ToLower() == "black" ? Color.Black : Color.White); //should return Color.Black
             board.players.Add(player);
 
             return RedirectToAction("Board", board);
