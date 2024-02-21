@@ -55,16 +55,36 @@
                     <label for="P1Name">Player 1 Name:</label>
                     <input type="text" name="P1Name" value="Player 1" />
 
-                    <input type="text" hidden id="color-selection" name="P1colorValue" value="white" />
+                    <label for="P1colorValue">Choose a color:</label>
+                    <select name="P1colorValue">
+                        <option value="white" selected="selected">White</option>
+                        <option value="black">Black</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="orange">Orange</option>
+                        <option value="green">Green</option>
+                        <option value="purple">Purple</option>
+                    </select>
                 </section>
                 <br /><br />
                 <!-- Player 2 Info -->
                 <section class="col-md-4" aria-labelledby="librariesTitle">
-                    <h2 id="librariesTitle">Player 2</h2>
-                    <label for="P2Name">Player 2 Name:</label>
-                    <input type="text" name="P2Name" value="Player 2" />
+                     <h2 id="librariesTitle">Player 2</h2>
+                     <label for="P2Name">Player 2 Name:</label>
+                     <input type="text" name="P2Name" value="Player 2" />
 
-                    <input type="text" hidden id="color-selection" name="P2colorValue" value="black" />
+                     <label for="P2colorValue">Choose a color:</label>
+                     <select name="P2colorValue" >
+                        <option value="black" selected="selected">Black</option>
+                        <option value="white">White</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="orange">Orange</option>
+                        <option value="green">Green</option>
+                        <option value="purple">Purple</option>
+                     </select>
                 </section>
                 <br /><br />
                 <button type="submit">Play Game</button>

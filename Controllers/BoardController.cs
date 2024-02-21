@@ -7,6 +7,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Web;
 using System.Drawing;
 using System.Web.Mvc;
+using System.Web.UI.HtmlControls;
 
 namespace PenteGame.Controllers
 {
@@ -41,18 +42,28 @@ namespace PenteGame.Controllers
         #endregion
 
         [HttpPost]
-        public ActionResult Index(string P1Name, string P1colorValue, string P2Name,string P2colorValue)
+        public ActionResult Index(string P1Name, string P1colorValue, string P2Name, string P2colorValue)
         {
-            //would be easier: board.players.Add(PlayerModel(P1Name,P1colorValue));
+            if (P1colorValue != null && P2colorValue != null)
+            {
+                if (P1colorValue != P2colorValue)
+                {
+                    PlayerModel player = new PlayerModel(P1Name, GetColorValue(P1colorValue));
+                    board.players.Add(player);
 
-            PlayerModel player = new PlayerModel(P1Name, P1colorValue.ToLower() == "black" ? Color.Black : Color.White);//should return Color.White
-            board.players.Add(player);
+                    player = new PlayerModel(P2Name, GetColorValue(P2colorValue));
+                    board.players.Add(player);
 
-            player = new PlayerModel(P2Name, P2colorValue.ToLower() == "black" ? Color.Black : Color.White); //should return Color.Black
-            board.players.Add(player);
-
-            return RedirectToAction("Board", board);
+                    return RedirectToAction("Board", board);
+                }
+                return RedirectToAction("Index");
+            }
+            else 
+            {
+                return RedirectToAction("Index");
+            }
         }
+
 
         public ActionResult StartGame(int numOfPlayers)
         {
@@ -429,6 +440,49 @@ namespace PenteGame.Controllers
         // check if stolen 
         // check if stolen == to 10
 
+        //Check the color and Get it to what it needs
+        public Color GetColorValue(string colorValue)
+        {
+            Color selected = new Color();
 
+            switch (colorValue.ToLower())
+            {
+                case "black":
+                    selected = Color.Black;
+                    break;
+                case "white":
+                    selected = Color.White;
+                    break;
+                case "red":
+                    selected = Color.Red;
+                    break;
+                case "blue":
+                    selected = Color.Blue;
+                    break;
+                case "yellow":
+                    selected = Color.Yellow;
+                    break;
+                case "orange":
+                    selected = Color.Orange;
+                    break;
+                case "green":
+                    selected = Color.Green;
+                    break;
+                case "purple":
+                    selected = Color.Purple;
+                    break;
+            }
+
+            //if (colorValue == "black") selected = Color.Black;
+            //else if (colorValue == "white") selected = Color.White;
+            //else if (colorValue == "red") selected = Color.Red;
+            //else if (colorValue == "blue") selected = Color.Blue;
+            //else if (colorValue == "yellow") selected = Color.Yellow;
+            //else if (colorValue == "orange") selected = Color.Orange;
+            //else if (colorValue == "green") selected = Color.Green;
+            //else if (colorValue == "purple") selected = Color.Purple;
+
+            return selected;
+        }
     }
 }
