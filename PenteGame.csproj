@@ -182,6 +182,7 @@
     <Content Include="Views\Board\Piece.cshtml" />
     <Content Include="Views\Board\Board.cshtml" />
     <Content Include="Views\Board\Index.cshtml" />
+    <Content Include="Views\Board\PlayerInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

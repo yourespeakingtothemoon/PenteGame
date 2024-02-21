@@ -1,0 +1,6 @@
+﻿@model PenteGame.Models.PlayerModel
+
+<center>
+    <h4><img src="@Model.pieceSprite" />@Model.Name</h4>
+    <h5>Pieces Captured: @foreach(PenteGame.Models.PieceModel p in Model.capturedPieces) { <img src="@p.image">}</h5>
+</center>

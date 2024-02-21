@@ -15,6 +15,12 @@ namespace PenteGame.Models
         public List<PlayerModel> players = new List<PlayerModel> { };
         public PieceModel lastPiece { get; set; }
 
+        public bool isGameOver { get; set; } = false;
+
+        public string latestEvent = "Game has started";
+
+        public PlayerModel currentPlayer;
+
         public BoardModel()
         {
             for (int i = 0; i < 19; i++)

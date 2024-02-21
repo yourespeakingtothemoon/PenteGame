@@ -15,7 +15,11 @@ namespace PenteGame.Models
 
         public int captured { get; set; } = 0;
 
+        public List<PieceModel> capturedPieces = new List<PieceModel> { };
+
         public Color colorValue;
+
+        public string pieceSprite { get; set; }
 
         public bool hasWon { get; set; } = false;
 
@@ -30,6 +34,8 @@ namespace PenteGame.Models
             Name = name;
             this.captured = captured;
             this.colorValue = colorValue;
+
+            this.pieceSprite = "/Content/Images/" + colorValue.Name + ".png";
             this.hasWon = hasWon;
         }
     }

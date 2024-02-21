@@ -6,15 +6,32 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+    
             <h2> Game Info</h2>
-<p>Player 1: insert model info here</p>
-<p>Player 2: insert model info here</p>
-            <p>Turn: insert model info here</p>
-<p>Winner: insert model info here</p>
+            <table>
+                <tr>
+                    <td>
+                     @Html.Partial("PlayerInfo", Model.players[0])
+                    </td>
+                    <td>
+                        @Html.Partial("PlayerInfo", Model.players[1])
+                    </td>
+                </tr>
+            </table>
+            <center>
+                <h4>@Model.latestEvent</h4>
+                @if (!Model.isGameOver) {
+                if (Model.currentPlayer == Model.players[0])
+                {
+                    <p>it is now @Model.players[0].Name's Turn</p>
+                }
+                else
+                {
+                    <p>it is now @Model.players[1].Name's Turn</p>
+                }
+                }
 
-
-        </div>
+            </center>
     </div>
 
 
@@ -68,7 +85,7 @@
                            else
                            {
                                <td>
-                                   @Html.Partial("Piece", Model.board[i, j])
+                                   @Html.Partial("Piece", Model.board[j, i])
                                </td>
                            }
 
