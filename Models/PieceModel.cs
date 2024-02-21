@@ -35,6 +35,17 @@ namespace PenteGame.Models
 
         }
 
+        public PieceModel(PieceModel piece)
+        {
+            this.id = piece.id;
+            this.image = piece.image;
+            this.x = piece.x;
+            this.y = piece.y;
+            this.colorValue = piece.colorValue;
+            this.ownedPlayer = piece.ownedPlayer;
+            this.isActive = piece.isActive;
+        }
+
       
     }
 }

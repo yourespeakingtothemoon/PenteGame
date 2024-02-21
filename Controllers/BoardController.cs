@@ -8,9 +8,23 @@ using System.Web;
 using System.Drawing;
 using System.Web.Mvc;
 using System.Web.UI.HtmlControls;
+using System.Security.Cryptography.X509Certificates;
+using System.Diagnostics;
 
 namespace PenteGame.Controllers
 {
+
+    public enum gameEvents
+    {
+        win = 0,
+        placePiece = 1,
+        capture = 2,
+        tria = 3,
+        tessera = 4
+    }
+
+
+
     public class BoardController : Controller
     {
         static public BoardModel board = new BoardModel();
@@ -42,7 +56,7 @@ namespace PenteGame.Controllers
         #endregion
 
         [HttpPost]
-        public ActionResult Index(string P1Name, string P1colorValue, string P2Name, string P2colorValue)
+        public ActionResult Start(string P1Name, string P1colorValue, string P2Name, string P2colorValue)
         {
             if (P1colorValue != null && P2colorValue != null)
             {
@@ -53,6 +67,8 @@ namespace PenteGame.Controllers
 
                     player = new PlayerModel(P2Name, GetColorValue(P2colorValue));
                     board.players.Add(player);
+
+                    board.currentPlayer = board.players[0];
 
                     return RedirectToAction("Board", board);
                 }
@@ -71,7 +87,9 @@ namespace PenteGame.Controllers
             {
                 PlayerModel player = new PlayerModel();
                 board.players.Add(player);
+                
             }
+            board.currentPlayer = board.players[0];
             return View("board", "board");
 
         }
@@ -120,318 +138,444 @@ namespace PenteGame.Controllers
             var y = Convert.ToInt32(Request.Form["pieceY"]);
             var piece = board.findPieceByCoords(x, y);
 
-           // PieceModel piece = new PieceModel(x,y);
-           // for now we will just turn the piece red
-           if (piece.image == "/Content/Images/empty.png")
-               {
-                if (board.lastPiece != null)
-                {
+            if (piece.image == "/Content/Images/empty.png")
+            {
+                piece.image = board.currentPlayer.pieceSprite;
+                piece.colorValue = board.currentPlayer.colorValue;
+                piece.ownedPlayer = board.currentPlayer;
+            }
+            else
+            {
+                return RedirectToAction("Board", board);//piece is already taken
+            }
 
-                    if (board.lastPiece.image == "/Content/Images/red.png")
-                    {
-                        piece.image = "/Content/Images/blue.png";
-                    }
-                    else
-                    {
-                        piece.image = "/Content/Images/red.png";
-
-                    }
-                }
-                else
-                {
-                        piece.image = "/Content/Images/red.png";
-                }
-               }
-             else
-               {
-             return RedirectToAction("Board", board);//piece is already taken
-               }
-
-           // UpdateBoard(piece);
+            // UpdateBoard(piece);
+            piece.colorValue = board.currentPlayer.colorValue;
+            piece.ownedPlayer = board.currentPlayer;
           board.lastPiece = piece;
+           // board.lastPiece.ownedPlayer = board.currentPlayer;
             board.board[x, y] = piece;
+            newPiece = piece;
+            newPiece.ownedPlayer = board.currentPlayer;
+            CheckGame();
+            ChangeTurn();
            return RedirectToAction("Board", board);
         }
 
 
-            // fun logic stuff
+        // fun logic stuff
 
-            public void CheckBoard()
+        void ChangeTurn()
         {
-
-            if (CheckCaptures() || CheckFiveinRow())
+            if (board.players[0] == board.currentPlayer)
             {
-                //win   
-
-
-                foreach (var player in board.players)
-                {
-                    if (player.hasWon)
-                    {
-                        //win game
-
-                    }
-                }
+                board.currentPlayer = board.players[1];
             }
-
+            else
+            {
+                board.currentPlayer = board.players[0];
+            }
         }
 
-        public bool CheckCaptures()
+        public void CheckGame()
         {
-            //horizontal and vertical
-            //left
-            if (newPiece.x < 3)
-            {
-                if (board.board[newPiece.x - 3, newPiece.y] != null)
-                {
-                    if (board.board[newPiece.x - 3, newPiece.y].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x - 2, newPiece.y] != null && board.board[newPiece.x - 1, newPiece.y] != null)
-                        {
-                            if (board.board[newPiece.x - 2, newPiece.y].colorValue != newPiece.colorValue || board.board[newPiece.x - 1, newPiece.y].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x - 2, newPiece.y] = null;
-                                board.board[newPiece.x - 1, newPiece.y] = null;
-                            }
-                        }
-                    }
-                }
-            }
-            //right
-            if (newPiece.x > 15)
-            {
-                if (board.board[newPiece.x + 3, newPiece.y] != null)
-                {
-                    if (board.board[newPiece.x + 3, newPiece.y].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x + 2, newPiece.y] != null && board.board[newPiece.x + 1, newPiece.y] != null)
-                        {
-                            if (board.board[newPiece.x + 2, newPiece.y].colorValue != newPiece.colorValue || board.board[newPiece.x + 1, newPiece.y].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x + 2, newPiece.y] = null;
-                                board.board[newPiece.x + 1, newPiece.y] = null;
-                            }
-                        }
-                    }
-                }
-            }
-            //up
-            if (newPiece.y < 3)
-            {
-                if (board.board[newPiece.x, newPiece.y + 3] != null)
-                {
-                    if (board.board[newPiece.x, newPiece.y + 3].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x, newPiece.y + 2] != null && board.board[newPiece.x, newPiece.y + 1] != null)
-                        {
-                            if (board.board[newPiece.x, newPiece.y + 2].colorValue != newPiece.colorValue || board.board[newPiece.x, newPiece.y + 1].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x, newPiece.y + 2] = null;
-                                board.board[newPiece.x, newPiece.y + 1] = null;
-                            }
-                        }
-                    }
-                }
-            }
-            //down
-            if (newPiece.y > 15)
-            {
-                if (board.board[newPiece.x, newPiece.y - 3] != null)
-                {
-                    if (board.board[newPiece.x, newPiece.y - 3].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x, newPiece.y - 2] != null && board.board[newPiece.x, newPiece.y - 1] != null)
-                        {
-                            if (board.board[newPiece.x, newPiece.y - 2].colorValue != newPiece.colorValue || board.board[newPiece.x, newPiece.y - 1].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x, newPiece.y - 2] = null;
-                                board.board[newPiece.x, newPiece.y - 1] = null;
-                            }
-                        }
-                    }
-                }
-            }
-
-            //dig
-            //left up
-            if (newPiece.x < 3 && newPiece.y < 3)
-            {
-                if (board.board[newPiece.x - 3, newPiece.y + 3] != null)
-                {
-                    if (board.board[newPiece.x - 3, newPiece.y + 3].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x - 2, newPiece.y + 2] != null && board.board[newPiece.x - 1, newPiece.y + 1] != null)
-                        {
-                            if (board.board[newPiece.x - 2, newPiece.y + 2].colorValue != newPiece.colorValue || board.board[newPiece.x - 1, newPiece.y + 1].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x - 2, newPiece.y + 2] = null;
-                                board.board[newPiece.x - 1, newPiece.y + 1] = null;
-                            }
-                        }
-                    }
-                }
-            }
-            //right up
-            if (newPiece.x > 15 && newPiece.y < 3)
-            {
-                if (board.board[newPiece.x + 3, newPiece.y + 3] != null)
-                {
-                    if (board.board[newPiece.x + 3, newPiece.y + 3].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x + 2, newPiece.y + 2] != null && board.board[newPiece.x + 1, newPiece.y + 1] != null)
-                        {
-                            if (board.board[newPiece.x + 2, newPiece.y + 2].colorValue != newPiece.colorValue || board.board[newPiece.x + 1, newPiece.y + 1].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x + 2, newPiece.y + 2] = null;
-                                board.board[newPiece.x + 1, newPiece.y + 1] = null;
-                            }
-                        }
-                    }
-                }
-            }
-            //right down
-            if (newPiece.x > 15 && newPiece.y > 15)
-            {
-                if (board.board[newPiece.x + 3, newPiece.y - 3] != null)
-                {
-                    if (board.board[newPiece.x + 3, newPiece.y - 3].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x + 2, newPiece.y - 2] != null && board.board[newPiece.x + 1, newPiece.y - 1] != null)
-                        {
-                            if (board.board[newPiece.x + 2, newPiece.y - 2].colorValue != newPiece.colorValue || board.board[newPiece.x + 1, newPiece.y - 1].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x + 2, newPiece.y - 2] = null;
-                                board.board[newPiece.x + 1, newPiece.y - 1] = null;
-                            }
-                        }
-                    }
-                }
-            }
-            //left down
-            if (newPiece.x < 3 && newPiece.y > 15)
-            {
-                if (board.board[newPiece.x - 3, newPiece.y - 3] != null)
-                {
-                    if (board.board[newPiece.x - 3, newPiece.y - 3].colorValue == newPiece.colorValue)
-                    {
-                        if (board.board[newPiece.x - 2, newPiece.y - 2] != null && board.board[newPiece.x - 1, newPiece.y - 1] != null)
-                        {
-                            if (board.board[newPiece.x - 2, newPiece.y - 2].colorValue != newPiece.colorValue || board.board[newPiece.x - 1, newPiece.y - 1].colorValue != newPiece.colorValue)
-                            {
-                                newPiece.ownedPlayer.captured += 2;
-                                board.board[newPiece.x - 2, newPiece.y - 2] = null;
-                                board.board[newPiece.x - 1, newPiece.y - 1] = null;
-                            }
-                        }
-                    }
-                }
-            }
-
+             CheckForEvents();
+             CaptureLogic();
+             CheckCaptureWin();
+            
+        }
+     
+        void CheckCaptureWin()
+        {
             if (newPiece.ownedPlayer.captured == 10)
             {
                 newPiece.ownedPlayer.hasWon = true;
+                EventDeploy(gameEvents.win, newPiece.ownedPlayer.Name);
+              //  return true;
             }
-
-            //to do
-            return false;
+            
         }
+        //Depreciated code - CheckGame() is now used
+        //    public void CheckBoard()
+        //{
 
-        public bool CheckFiveinRow()
+        //    if (CheckCaptures() || CheckFiveinRow())
+        //    {
+        //        //win   
+
+
+        //        foreach (var player in board.players)
+        //        {
+        //            if (player.hasWon)
+        //            {
+        //                //win game
+
+        //            }
+        //        }
+        //    }
+        //}
+
+        public void CaptureLogic()
         {
-            if (CheckFiveHorizontal() || CheckFiveVertical() || CheckFiveFrontSlash() || CheckFiveBackSlash())
-            {
-                return true;
-            }
-            return false;
+            CaptureLogicHoriz();
+            CaptureLogicVert();
+            CaptureLogicDiag();
         }
 
-        public bool CheckFiveHorizontal()
+        //Depreciated code - CaptureLogic() is now used
+        //public bool CheckCaptures()
+        //{
+        //    //horizontal and vertical
+        //    //left
+        //    if (newPiece.x < 3)
+        //    {
+        //        if (board.board[newPiece.x - 3, newPiece.y] != null)
+        //        {
+        //            if (board.board[newPiece.x - 3, newPiece.y].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x - 2, newPiece.y] != null && board.board[newPiece.x - 1, newPiece.y] != null)
+        //                {
+        //                    if (board.board[newPiece.x - 2, newPiece.y].colorValue != newPiece.colorValue || board.board[newPiece.x - 1, newPiece.y].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x - 2, newPiece.y] = null;
+        //                        board.board[newPiece.x - 1, newPiece.y] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //right
+        //    if (newPiece.x > 15)
+        //    {
+        //        if (board.board[newPiece.x + 3, newPiece.y] != null)
+        //        {
+        //            if (board.board[newPiece.x + 3, newPiece.y].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x + 2, newPiece.y] != null && board.board[newPiece.x + 1, newPiece.y] != null)
+        //                {
+        //                    if (board.board[newPiece.x + 2, newPiece.y].colorValue != newPiece.colorValue || board.board[newPiece.x + 1, newPiece.y].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x + 2, newPiece.y] = null;
+        //                        board.board[newPiece.x + 1, newPiece.y] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //up
+        //    if (newPiece.y < 3)
+        //    {
+        //        if (board.board[newPiece.x, newPiece.y + 3] != null)
+        //        {
+        //            if (board.board[newPiece.x, newPiece.y + 3].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x, newPiece.y + 2] != null && board.board[newPiece.x, newPiece.y + 1] != null)
+        //                {
+        //                    if (board.board[newPiece.x, newPiece.y + 2].colorValue != newPiece.colorValue || board.board[newPiece.x, newPiece.y + 1].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x, newPiece.y + 2] = null;
+        //                        board.board[newPiece.x, newPiece.y + 1] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //down
+        //    if (newPiece.y > 15)
+        //    {
+        //        if (board.board[newPiece.x, newPiece.y - 3] != null)
+        //        {
+        //            if (board.board[newPiece.x, newPiece.y - 3].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x, newPiece.y - 2] != null && board.board[newPiece.x, newPiece.y - 1] != null)
+        //                {
+        //                    if (board.board[newPiece.x, newPiece.y - 2].colorValue != newPiece.colorValue || board.board[newPiece.x, newPiece.y - 1].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x, newPiece.y - 2] = null;
+        //                        board.board[newPiece.x, newPiece.y - 1] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    //dig
+        //    //left up
+        //    if (newPiece.x < 3 && newPiece.y < 3)
+        //    {
+        //        if (board.board[newPiece.x - 3, newPiece.y + 3] != null)
+        //        {
+        //            if (board.board[newPiece.x - 3, newPiece.y + 3].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x - 2, newPiece.y + 2] != null && board.board[newPiece.x - 1, newPiece.y + 1] != null)
+        //                {
+        //                    if (board.board[newPiece.x - 2, newPiece.y + 2].colorValue != newPiece.colorValue || board.board[newPiece.x - 1, newPiece.y + 1].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x - 2, newPiece.y + 2] = null;
+        //                        board.board[newPiece.x - 1, newPiece.y + 1] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //right up
+        //    if (newPiece.x > 15 && newPiece.y < 3)
+        //    {
+        //        if (board.board[newPiece.x + 3, newPiece.y + 3] != null)
+        //        {
+        //            if (board.board[newPiece.x + 3, newPiece.y + 3].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x + 2, newPiece.y + 2] != null && board.board[newPiece.x + 1, newPiece.y + 1] != null)
+        //                {
+        //                    if (board.board[newPiece.x + 2, newPiece.y + 2].colorValue != newPiece.colorValue || board.board[newPiece.x + 1, newPiece.y + 1].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x + 2, newPiece.y + 2] = null;
+        //                        board.board[newPiece.x + 1, newPiece.y + 1] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //right down
+        //    if (newPiece.x > 15 && newPiece.y > 15)
+        //    {
+        //        if (board.board[newPiece.x + 3, newPiece.y - 3] != null)
+        //        {
+        //            if (board.board[newPiece.x + 3, newPiece.y - 3].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x + 2, newPiece.y - 2] != null && board.board[newPiece.x + 1, newPiece.y - 1] != null)
+        //                {
+        //                    if (board.board[newPiece.x + 2, newPiece.y - 2].colorValue != newPiece.colorValue || board.board[newPiece.x + 1, newPiece.y - 1].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x + 2, newPiece.y - 2] = null;
+        //                        board.board[newPiece.x + 1, newPiece.y - 1] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //left down
+        //    if (newPiece.x < 3 && newPiece.y > 15)
+        //    {
+        //        if (board.board[newPiece.x - 3, newPiece.y - 3] != null)
+        //        {
+        //            if (board.board[newPiece.x - 3, newPiece.y - 3].colorValue == newPiece.colorValue)
+        //            {
+        //                if (board.board[newPiece.x - 2, newPiece.y - 2] != null && board.board[newPiece.x - 1, newPiece.y - 1] != null)
+        //                {
+        //                    if (board.board[newPiece.x - 2, newPiece.y - 2].colorValue != newPiece.colorValue || board.board[newPiece.x - 1, newPiece.y - 1].colorValue != newPiece.colorValue)
+        //                    {
+        //                        newPiece.ownedPlayer.captured += 2;
+        //                        board.board[newPiece.x - 2, newPiece.y - 2] = null;
+        //                        board.board[newPiece.x - 1, newPiece.y - 1] = null;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    if (newPiece.ownedPlayer.captured == 10)
+        //    {
+        //        newPiece.ownedPlayer.hasWon = true;
+        //    }
+
+        //    //to do
+        //    return false;
+        //}
+
+        public void CaptureLogicHoriz()
         {
-            int count = 0;
-            for (int i = newPiece.x; i < 4; i++)
+            if (newPiece.x > 3 && board.board[newPiece.x - 3, newPiece.y].image == newPiece.image && newPiece.image != board.board[newPiece.x-1,newPiece.y].image)
             {
-                if (newPiece.x - i < 0) break;
-                if (board.board[newPiece.x - i, newPiece.y].colorValue != newPiece.colorValue) break;
-                count++;
+                if (board.board[newPiece.x - 1, newPiece.y].image == board.board[newPiece.x - 1, newPiece.y].image && board.board[newPiece.x-1,newPiece.y].image!="/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x - 1, newPiece.y], board.board[newPiece.x - 2, newPiece.y] });
+                }
+                
             }
-            for (int i = newPiece.x; i > -4; i--)
+
+            if (newPiece.x < 15 && board.board[newPiece.x + 3, newPiece.y].image == newPiece.image && newPiece.image != board.board[newPiece.x + 1, newPiece.y].image)
             {
-                if (newPiece.x - i > 15) break;
-                if (board.board[newPiece.x - i, newPiece.y].colorValue != newPiece.colorValue) break;
-                count++;
+                if (board.board[newPiece.x + 1, newPiece.y].image == board.board[newPiece.x + 1, newPiece.y].image && board.board[newPiece.x + 1, newPiece.y].image != "/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x + 1, newPiece.y], board.board[newPiece.x + 2, newPiece.y] });
+                }
+          
             }
-            if (count >= 5) return true;
-            return false;
+
         }
 
-        public bool CheckFiveVertical()
+        public void CaptureLogicVert()
         {
-            int count = 0;
-            for (int i = newPiece.y; i > -4; i--)
+if (newPiece.y > 3 && board.board[newPiece.x, newPiece.y - 3].image == newPiece.image && newPiece.image != board.board[newPiece.x, newPiece.y - 1].image)
             {
-                if (newPiece.x - i < 0) break;
-                if (board.board[newPiece.x, newPiece.y - i].colorValue != newPiece.colorValue) break;
-                count++;
+                if (board.board[newPiece.x, newPiece.y - 1].image == board.board[newPiece.x, newPiece.y - 1].image && board.board[newPiece.x, newPiece.y - 1].image != "/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x, newPiece.y - 1], board.board[newPiece.x, newPiece.y - 2] });
+                }
             }
-            for (int i = newPiece.y; i < 4; i++)
+
+            if (newPiece.y < 15 && board.board[newPiece.x, newPiece.y + 3].image == newPiece.image && newPiece.image != board.board[newPiece.x, newPiece.y + 1].image)
             {
-                if (newPiece.x - i > 15) break;
-                if (board.board[newPiece.x, newPiece.y - i].colorValue != newPiece.colorValue) break;
-                count++;
+                if (board.board[newPiece.x, newPiece.y + 1].image == board.board[newPiece.x, newPiece.y + 1].image && board.board[newPiece.x, newPiece.y + 1].image != "/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x, newPiece.y + 1], board.board[newPiece.x, newPiece.y + 2] });
+                }
             }
-            if (count >= 5) return true;
-            return false;
+           
+            
         }
 
-        public bool CheckFiveFrontSlash()
+        void CaptureLogicDiag()
         {
-            int count = 0;
-            for (int i = newPiece.x; i < 4; i++)
+            if (newPiece.x > 3 && newPiece.y > 3 && board.board[newPiece.x - 3, newPiece.y - 3].image == newPiece.image && newPiece.image != board.board[newPiece.x - 1, newPiece.y - 1].image)
             {
-
-                if (newPiece.x - i < 0 || newPiece.x + i > 15) break;
-                if (board.board[newPiece.x - i, newPiece.y + i].colorValue != newPiece.colorValue) break;
-                count++;
-
-
+                if (board.board[newPiece.x - 1, newPiece.y - 1].image == board.board[newPiece.x - 1, newPiece.y - 1].image && board.board[newPiece.x - 1, newPiece.y - 1].image != "/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x - 1, newPiece.y - 1], board.board[newPiece.x - 2, newPiece.y - 2] });
+                }
             }
-            for (int i = newPiece.x; i > -4; i--)
+
+            if (newPiece.x < 15 && newPiece.y < 15 && board.board[newPiece.x + 3, newPiece.y + 3].image == newPiece.image && newPiece.image != board.board[newPiece.x + 1, newPiece.y + 1].image)
             {
-
-                if (newPiece.x - i > 15 || newPiece.x + i < 0) break;
-                if (board.board[newPiece.x - i, newPiece.y + i].colorValue != newPiece.colorValue) break;
-                count++;
-
+                if (board.board[newPiece.x + 1, newPiece.y + 1].image == board.board[newPiece.x + 1, newPiece.y + 1].image && board.board[newPiece.x + 1, newPiece.y + 1].image != "/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x + 1, newPiece.y + 1], board.board[newPiece.x + 2, newPiece.y + 2] });
+                }
             }
-            if (count >= 5) return true;
-            return false;
+
+            if (newPiece.x > 3 && newPiece.y < 15 && board.board[newPiece.x - 3, newPiece.y + 3].image == newPiece.image && newPiece.image != board.board[newPiece.x - 1, newPiece.y + 1].image)
+            {
+                if (board.board[newPiece.x - 1, newPiece.y + 1].image == board.board[newPiece.x - 1, newPiece.y + 1].image && board.board[newPiece.x - 1, newPiece.y + 1].image != "/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x - 1, newPiece.y + 1], board.board[newPiece.x - 2, newPiece.y + 2] });
+
+                }
+            }
+
+            if (newPiece.x < 15 && newPiece.y > 3 && board.board[newPiece.x + 3, newPiece.y - 3].image == newPiece.image && newPiece.image != board.board[newPiece.x + 1, newPiece.y - 1].image)
+            {
+                if (board.board[newPiece.x + 1, newPiece.y - 1].image == board.board[newPiece.x + 1, newPiece.y - 1].image && board.board[newPiece.x + 1, newPiece.y - 1].image != "/Content/Images/empty.png")
+                {
+                    CapturePieces(new List<PieceModel> { board.board[newPiece.x + 1, newPiece.y - 1], board.board[newPiece.x + 2, newPiece.y - 2] });
+                }
+            }
+
         }
 
-        public bool CheckFiveBackSlash()
+        
+
+        void CapturePieces(List<PieceModel> pieces)
         {
-            int count = 0;
-            for (int i = newPiece.x; i < 4; i++)
+            newPiece.ownedPlayer.captured += pieces.Count;
+
+            foreach (var piece in pieces)
             {
-                if (i < 0) break;
-                if (board.board[newPiece.x - i, newPiece.y - i].colorValue != newPiece.colorValue) break;
-                count++;
+                PieceModel cappedPiece = new PieceModel(piece);
+                newPiece.ownedPlayer.capturedPieces.Add(cappedPiece);
+                piece.colorValue = Color.Empty;
+                piece.image = "/Content/Images/empty.png";
             }
-            for (int i = newPiece.x; i > -4; i--)
-            {
-                if (i > 15) break;
-                if (board.board[newPiece.x - i, newPiece.y - i].colorValue != newPiece.colorValue) break;
-                count++;
-            }
-            if (count >= 5) return true;
-            return false;
+            EventDeploy(gameEvents.capture, board.currentPlayer.Name);
         }
+
+        //depreciated code - Event System is now used
+        //public bool CheckFiveinRow()
+        //{
+        //    if (CheckFiveHorizontal() || CheckFiveVertical() || CheckFiveFrontSlash() || CheckFiveBackSlash())
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
+        //public bool CheckFiveHorizontal()
+        //{
+        //    int count = 0;
+        //    for (int i = newPiece.x; i < 4; i++)
+        //    {
+        //        if (newPiece.x - i < 0) break;
+        //        if (board.board[newPiece.x - i, newPiece.y].colorValue != newPiece.colorValue) break;
+        //        count++;
+        //    }
+        //    for (int i = newPiece.x; i > -4; i--)
+        //    {
+        //        if (newPiece.x - i > 15) break;
+        //        if (board.board[newPiece.x - i, newPiece.y].colorValue != newPiece.colorValue) break;
+        //        count++;
+        //    }
+        //    if (count >= 5) return true;
+        //    return false;
+        //}
+
+        //public bool CheckFiveVertical()
+        //{
+        //    int count = 0;
+        //    for (int i = newPiece.y; i > -4; i--)
+        //    {
+        //        if (newPiece.x - i < 0) break;
+        //        if (board.board[newPiece.x, newPiece.y - i].colorValue != newPiece.colorValue) break;
+        //        count++;
+        //    }
+        //    for (int i = newPiece.y; i < 4; i++)
+        //    {
+        //        if (newPiece.x - i > 15) break;
+        //        if (board.board[newPiece.x, newPiece.y - i].colorValue != newPiece.colorValue) break;
+        //        count++;
+        //    }
+        //    if (count >= 5) return true;
+        //    return false;
+        //}
+
+        //public bool CheckFiveFrontSlash()
+        //{
+        //    int count = 0;
+        //    for (int i = newPiece.x; i < 4; i++)
+        //    {
+
+        //        if (newPiece.x - i < 0 || newPiece.x + i > 15) break;
+        //        if (board.board[newPiece.x - i, newPiece.y + i].colorValue != newPiece.colorValue) break;
+        //        count++;
+
+
+        //    }
+        //    for (int i = newPiece.x; i > -4; i--)
+        //    {
+
+        //        if (newPiece.x - i > 15 || newPiece.x + i < 0) break;
+        //        if (board.board[newPiece.x - i, newPiece.y + i].colorValue != newPiece.colorValue) break;
+        //        count++;
+
+        //    }
+        //    if (count >= 5) return true;
+        //    return false;
+        //}
+
+        //public bool CheckFiveBackSlash()
+        //{
+        //    int count = 0;
+        //    for (int i = newPiece.x; i < 4; i++)
+        //    {
+        //        if (i < 0) break;
+        //        if (board.board[newPiece.x - i, newPiece.y - i].colorValue != newPiece.colorValue) break;
+        //        count++;
+        //    }
+        //    for (int i = newPiece.x; i > -4; i--)
+        //    {
+        //        if (i > 15) break;
+        //        if (board.board[newPiece.x - i, newPiece.y - i].colorValue != newPiece.colorValue) break;
+        //        count++;
+        //    }
+        //    if (count >= 5) return true;
+        //    return false;
+        //}
 
 
 
@@ -483,6 +627,226 @@ namespace PenteGame.Controllers
             //else if (colorValue == "purple") selected = Color.Purple;
 
             return selected;
+        }
+
+
+
+
+
+
+        public void EventDeploy(gameEvents eventID, string actingPlayerName)
+        {
+            //check for win
+            switch (eventID)
+            {
+
+                case gameEvents.win:
+
+                    board.latestEvent = actingPlayerName + " has won the game!";
+                    board.isGameOver = true;
+                    break;
+                case gameEvents.placePiece:
+                    board.latestEvent = actingPlayerName + " has placed a piece at "+ newPiece.x.ToString() +","+newPiece.y.ToString();
+                    break;
+                case gameEvents.capture:
+                    board.latestEvent = actingPlayerName + " has captured a pair!";
+                    break;
+                case gameEvents.tria:
+                    board.latestEvent = actingPlayerName + " has formed a tria!";
+                    break;
+                case gameEvents.tessera:
+                    board.latestEvent = actingPlayerName + " has formed a tessera!";
+                    break;
+            }
+
+            //check if captured
+
+
+            //check for tria
+            //check for tessera
+            //if none of the above, return "@player has placed a piece at x,y"
+
+
+
+        }
+
+
+        void CheckForEvents()
+        {
+            switch (CheckRowEvent())
+            {
+                case 3:
+                    EventDeploy(gameEvents.tria, board.currentPlayer.Name);
+                    break;
+                case 4:
+                    EventDeploy(gameEvents.tessera, board.currentPlayer.Name);
+                    break;
+                case 5:
+                    EventDeploy(gameEvents.win, board.currentPlayer.Name);
+                    break;
+                default:
+                    EventDeploy(gameEvents.placePiece, board.currentPlayer.Name);
+                    break;
+            }
+        }
+
+
+        int CheckRowEvent()
+        {
+            int ret = 0;
+            int horiz = CountSideways(newPiece);
+            ret = horiz;
+            int vert = CountVertical(newPiece);
+            ret = vert > ret ? vert : ret;
+            int diag = CountDiagonal(newPiece);
+            ret = diag > ret ? diag : ret;
+
+            return ret;
+        }
+
+
+
+
+        int CountSideways(PieceModel piece)
+        {
+            int countLeft = 0;
+            int countRight = 0;
+            //loop back to start of board and count matching pieces
+
+            for (int i = piece.x; i < 19; i++)
+            {
+
+                if (board.board[i, piece.y].image == piece.image)
+                {
+                    countLeft++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int i = piece.x; i > 0; i--)
+            {
+                if (board.board[i, piece.y].image == piece.image)
+                {
+                    countRight++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+
+            return countLeft > countRight ? countLeft : countRight;
+
+        }
+
+        int CountVertical(PieceModel piece)
+        {
+            int countUp = 0;
+            int countDown = 0;
+            //loop back to start of board and count matching pieces
+
+            for (int i = piece.y; i < 19; i++)
+            {
+
+                if (board.board[piece.x, i].image == piece.image)
+                {
+                    countUp++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int i = piece.y; i > 0; i--)
+            {
+                if (board.board[piece.x, i].image == piece.image)
+                {
+                    countDown++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return countUp > countDown ? countUp : countDown;
+        }
+
+        int CountDiagonal(PieceModel piece)
+        {
+            int countXY = 0;
+            int countxy = 0;
+            int countXy = 0;
+            int countxY = 0;
+            //loop back to start of board and count matching pieces
+
+            for (int i = piece.x; i < 19; i++)
+            {
+                for (int j = piece.y; j < 19; j++)
+                {
+                    if (board.board[i, j].image == piece.image)
+                    {
+                        countXY++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            for (int i = piece.x; i > 0; i--)
+            {
+                for (int j = piece.y; j > 0; j--)
+                {
+                    if (board.board[i, j].image == piece.image)
+                    {
+                        countxy++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            for (int i = piece.x; i < 19; i++)
+            {
+                for (int j = piece.y; j > 0; j--)
+                {
+                    if (board.board[i, j].image == piece.image)
+                    {
+                        countXy++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            for (int i = piece.x; i > 0; i--)
+            {
+                for (int j = piece.y; j < 19; j++)
+                {
+                    if (board.board[i, j].image == piece.image)
+                    {
+                        countxY++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+
+            int count = countXY > countxy ? countXY : countxy;
+            count = count > countXy ? count : countXy;
+            count = count > countxY ? count : countxY;
+            return count;
         }
     }
 }
