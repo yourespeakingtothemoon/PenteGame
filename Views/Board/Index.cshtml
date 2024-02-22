@@ -9,102 +9,113 @@
 
 <main>
 
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">Game of Pente</h1>
-        <p>
-            Welcome to the game of Pente! <br />
+    <section class="row" aria-labelledby="aspnetTitle" align="center">
+        <center>
+            <h1 id="title">Game of Pente</h1>
+            <p>
+                Welcome to the game of Pente! <br />
 
-            <div>
-                <!-- Rules (Taken from Chat GPT, then altered to fit what was needed) -->
-                <!-- Collapsable: https://www.w3schools.com/howto/howto_js_collapsible.asp -->
-                <button type="button" class="collapsible">Rules of the Game</button>
-                <div class="content">
-                    <div>
-                        <b>General Info:</b>
-                        <br />
-                        &#8226; The goal is to either capture five pairs of the opponent's stones in a row (called "Pente") or capture a total of ten stones. <br />
-                        &#8226; The game is played on a 19x19 grid.<br />
-                        &#8226; Players use stones of two different colors (commonly black and white).<br />
-                        &#8226; Players take turns placing one stone of their color on an empty intersection of the board and cannot pass their turn.<br />
-                        &#8226; If two stones of one color are placed on either side of two opponent stones in a straight line, the opponent's stones are captured and removed from the board.<br />
-                        &#8226; Capturing is not allowed if it creates a three-in-a-row for the opponent.<br />
+                <div>
+                    <!-- Rules (Taken from Chat GPT, then altered to fit what was needed) -->
+                    <!-- Collapsable: https://www.w3schools.com/howto/howto_js_collapsible.asp -->
+                    <button type="button" class="collapsible">Rules of the Game</button>
+                    <div class="content">
+                        <div>
+                            <b>General Info:</b>
+                            <br />
+                            &#8226; The goal is to either capture five pairs of the opponent's stones in a row (called "Pente") or capture a total of ten stones. <br />
+                            &#8226; The game is played on a 19x19 grid.<br />
+                            &#8226; Players use stones of two different colors (commonly black and white).<br />
+                            &#8226; Players take turns placing one stone of their color on an empty intersection of the board and cannot pass their turn.<br />
+                            &#8226; If two stones of one color are placed on either side of two opponent stones in a straight line, the opponent's stones are captured and removed from the board.<br />
+                            &#8226; Capturing is not allowed if it creates a three-in-a-row for the opponent.<br />
 
-                        <br />
-                        <b>End of the Game:</b>
-                        <br />
-                        &#8226; The game ends when a player achieves Pente (five pairs of stones in a row) or captures a total of ten opponent stones.<br />
-                        &#8226; If both players achieve Pente on the same move, the game is a draw.<br />
+                            <br />
+                            <b>End of the Game:</b>
+                            <br />
+                            &#8226; The game ends when a player achieves Pente (five pairs of stones in a row) or captures a total of ten opponent stones.<br />
+                            &#8226; If both players achieve Pente on the same move, the game is a draw.<br />
 
-                        <br /><br />
-                        <a href="https://www.pente.net/instructions.html" target="_blank">More Info on the Rules</a>
-                        <br />
-                        <hr />
+                            <br /><br />
+                            <a href="https://www.pente.net/instructions.html" target="_blank">More Info on the Rules</a>
+                            <br />
+                            <hr />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        </p>
+            </p>
+        </center>
     </section>
 
     <div >
+        
         <form action="Board/Start" controller="Board" method="Post">
             <div class="PlayerInput">
-                <!--Timer Settings-->
-                <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-                    <h2 id="gettingStartedTitle">Timer</h2>
+                <center>
+                    <!--Timer Settings-->
+                    <section class="col-md-4" aria-labelledby="gettingStartedTitle">
+                        <h2 id="gettingStartedTitle">Timer</h2>
 
-                    <label for="timerUse">Using Timer?</label>
-                    <input type="checkbox" name="timerUse" value="true" checked="checked" />
-                    <br />
-                    <label for="timerLength">Timer Length:</label>
-                    <input type="number" name="timerLength" value="30" min="10" max="300" size="4" />
+                        <label for="timerUse">Using Timer?</label>
+                        <input type="checkbox" name="timerUse" value="true" checked="checked" />
+                        <br />
+                        <label for="timerLength">Timer Length:</label>
+                        <input type="number" name="timerLength" value="30" min="10" max="300" size="4" />
 
 
-                </section>
-
-                <!-- Player 1 info -->
-                <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-                    <h2 id="gettingStartedTitle">Player 1</h2>
-                    <label for="P1Name">Player 1 Name:</label>
-                    <input type="text" name="P1Name" value="Player 1" />
-                    <br /> <br />
-                    <div>
-                        <label for="P1colorValue">Choose a color:</label>
-                        <select name="P1colorValue">
-                            <option value="white" selected="selected">White</option>
-                            <option value="black">Black</option>
-                            <option value="red">Red</option>
-                            <option value="blue">Blue</option>
-                            <option value="yellow">Yellow</option>
-                            <option value="orange">Orange</option>
-                            <option value="green">Green</option>
-                            <option value="purple">Purple</option>
-                        </select>
-                    </div>
-                </section>
+                    </section>
+                </center>
+                <table style="width: 100%; border: 0px; background-color: transparent">
+                    <tr style="width: 100%; padding:0px; margin:0px">
+                        <td style="text-align:left;">
+                            <!-- Player 1 info -->
+                            <section class="col-md-4" aria-labelledby="gettingStartedTitle">
+                                <h2 id="gettingStartedTitle">Player 1</h2>
+                                <label for="P1Name">Player 1 Name:</label>
+                                <input type="text" name="P1Name" value="Player 1" />
+                                <br /> <br />
+                                <div>
+                                    <label for="P1colorValue">Choose a color:</label>
+                                    <select name="P1colorValue">
+                                        <option value="white" selected="selected">White</option>
+                                        <option value="black">Black</option>
+                                        <option value="red">Red</option>
+                                        <option value="blue">Blue</option>
+                                        <option value="yellow">Yellow</option>
+                                        <option value="orange">Orange</option>
+                                        <option value="green">Green</option>
+                                        <option value="purple">Purple</option>
+                                    </select>
+                                </div>
+                            </section>
+                        </td>
+                        <td style="text-align:right; padding:0px; margin:0px;">
+                            <!-- Player 2 Info -->
+                            <section class="col-md-4" aria-labelledby="gettingStartedTitle" style="padding:0px; margin:0px" >
+                                <h2 id="librariesTitle">Player 2</h2>
+                                <label for="P2Name">Player 2 Name:</label>
+                                <input type="text" name="P2Name" value="Player 2" />
+                                <br /> <br />
+                                <div>
+                                    <label for="P2colorValue">Choose a color:</label>
+                                    <select name="P2colorValue">
+                                        <option value="black" selected="selected">Black</option>
+                                        <option value="white">White</option>
+                                        <option value="red">Red</option>
+                                        <option value="blue">Blue</option>
+                                        <option value="yellow">Yellow</option>
+                                        <option value="orange">Orange</option>
+                                        <option value="green">Green</option>
+                                        <option value="purple">Purple</option>
+                                    </select>
+                                    </div>
+                            </section>
+                        </td>
+                    </tr>
+                </table>
                 <br /><br />
-                <!-- Player 2 Info -->
-                <section class="col-md-4" aria-labelledby="librariesTitle">
-                    <h2 id="librariesTitle">Player 2</h2>
-                    <label for="P2Name">Player 2 Name:</label>
-                    <input type="text" name="P2Name" value="Player 2" />
-                    <br /> <br />
-                    <div>
-                        <label for="P2colorValue">Choose a color:</label>
-                        <select name="P2colorValue">
-                            <option value="black" selected="selected">Black</option>
-                            <option value="white">White</option>
-                            <option value="red">Red</option>
-                            <option value="blue">Blue</option>
-                            <option value="yellow">Yellow</option>
-                            <option value="orange">Orange</option>
-                            <option value="green">Green</option>
-                            <option value="purple">Purple</option>
-                        </select>
-                    </div>
-                </section>
-                <br /><br />
-                <button type="submit">Play Game</button>
+                <button type="submit" style="width:100%">Play Game</button>
             </div>
         </form>
 
