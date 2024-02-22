@@ -49,6 +49,19 @@
     <div >
         <form action="Board/Start" controller="Board" method="Post">
             <div class="PlayerInput">
+                <!--Timer Settings-->
+                <section class="col-md-4" aria-labelledby="gettingStartedTitle">
+                    <h2 id="gettingStartedTitle">Timer</h2>
+
+                    <label for="timerUse">Using Timer?</label>
+                    <input type="checkbox" name="timerUse" value="true" checked="checked" />
+                    <br />
+                    <label for="timerLength">Timer Length:</label>
+                    <input type="number" name="timerLength" value="30" min="10" max="300" size="4" />
+
+
+                </section>
+
                 <!-- Player 1 info -->
                 <section class="col-md-4" aria-labelledby="gettingStartedTitle">
                     <h2 id="gettingStartedTitle">Player 1</h2>
