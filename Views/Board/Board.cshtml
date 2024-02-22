@@ -4,14 +4,34 @@
     ViewBag.Title = "Board";
 }
 
-<div class="container">
-    <div class="row">
-    
+@if (Model.timerUsed && !Model.isGameOver)
+{
+    <form id="timeUp" controller="Board" action="SkipTurn">
+    </form>
+    <script>
+
+           let Count = @Model.timerLength;
+let timer = setInterval(function () {
+                Count--;
+                document.getElementById("timer").innerHTML = "Seconds Remaining: " + Count;
+                if (Count == 0) {
+                     clearInterval(timer);
+                     document.getElementById("timeUp").submit();
+                }
+              }, 1000);
+    </script>
+}
+else { }
+
+
+ <div class="container">
+        <div class="row">
+
             <h2> Game Info</h2>
             <table>
                 <tr>
                     <td>
-                     @Html.Partial("PlayerInfo", Model.players[0])
+                        @Html.Partial("PlayerInfo", Model.players[0])
                     </td>
                     <td>
                         @Html.Partial("PlayerInfo", Model.players[1])
@@ -20,82 +40,108 @@
             </table>
             <center>
                 <h4>@Model.latestEvent</h4>
-                @if (!Model.isGameOver) {
-                if (Model.currentPlayer == Model.players[0])
+                @if (!Model.isGameOver)
                 {
-                    <p>it is now @Model.players[0].Name's Turn</p>
+                    if (Model.currentPlayer == Model.players[0])
+                    {
+                        <h5>
+                            It is now @Model.players[0].Name's Turn
+                        </h5>
+                    }
+                    else
+                    {
+                        <h5>
+                            It is now @Model.players[1].Name's Turn
+                        </h5>
+                    }
                 }
-                else
+
+
+                @if (Model.timerUsed)
                 {
-                    <p>it is now @Model.players[1].Name's Turn</p>
+                    <i id="timer"> Seconds Remaining: @Model.timerLength</i>
                 }
+                else { }
+
+
+                @if (Model.isGameOver)
+                {
+                   
+                    <form id="resetBtn1" controller="Board" action="ResetGame1">
+                        <input type="submit" value="Play Again" />
+                    </form>
+                    <form id="resetBtn2" controller="Board" action="ResetGame2">
+                        <input type="submit" value="Back to Menu" />
+                    </form>
                 }
+                else { }
+
 
             </center>
+        </div>
+
+
     </div>
 
 
-</div>
-
-
-<div class="container
+    <div class="container
 ">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-borderless" cellpadding="0">
-                <tr padding="0">
-                    <td></td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                    <td>7</td>
-                    <td>8</td>
-                    <td>9</td>
-                    <td>10</td>
-                    <td>11</td>
-                    <td>12</td>
-                    <td>13</td>
-                    <td>14</td>
-                    <td>15</td>
-                    <td>16</td>
-                    <td>17</td>
-                    <td>18</td>
-                    <td>19</td>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-borderless" cellpadding="0">
+                    <tr padding="0">
+                        <td></td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>10</td>
+                        <td>11</td>
+                        <td>12</td>
+                        <td>13</td>
+                        <td>14</td>
+                        <td>15</td>
+                        <td>16</td>
+                        <td>17</td>
+                        <td>18</td>
+                        <td>19</td>
 
-                </tr>
-                @for (int i = 0; i < 19; i++)
-                {
-                   <tr padding="0">
+                    </tr>
+                    @for (int i = 0; i < 19; i++)
+                    {
+                        <tr padding="0">
 
-                       @for (int j = -1; j < 19; j++)
-                       {
+                            @for (int j = -1; j < 19; j++)
+                            {
 
-                           if (j < 0)
-                           {
-                               int r = i + 1;
-                               <td>
-                                   @r
-                               </td>
-                           }
-
-
-                           else
-                           {
-                               <td>
-                                   @Html.Partial("Piece", Model.board[j, i])
-                               </td>
-                           }
+                                if (j < 0)
+                                {
+                                    int r = i + 1;
+                                    <td>
+                                        @r
+                                    </td>
+                                }
 
 
-                       }
-                   </tr>
-                }
+                                else
+                                {
+                                    <td>
+                                        @Html.Partial("Piece", Model.board[j, i])
+                                    </td>
+                                }
 
-            </table>
+
+                            }
+                        </tr>
+                    }
+
+                </table>
+            </div>
         </div>
     </div>
-</div>
 ```

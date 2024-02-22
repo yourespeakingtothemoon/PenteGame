@@ -14,7 +14,8 @@ namespace PenteGame.Models
         public PieceModel[,] board { get; set; } = new PieceModel[19, 19];
         public List<PlayerModel> players = new List<PlayerModel> { };
         public PieceModel lastPiece { get; set; }
-
+        public int timerLength { get; set; } = 30;
+        public bool timerUsed { get; set; } = true;
         public bool isGameOver { get; set; } = false;
 
         public string latestEvent = "Game has started";

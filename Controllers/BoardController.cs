@@ -10,6 +10,9 @@ using System.Web.Mvc;
 using System.Web.UI.HtmlControls;
 using System.Security.Cryptography.X509Certificates;
 using System.Diagnostics;
+using System.EnterpriseServices;
+using System.Web.UI.WebControls;
+using Microsoft.Ajax.Utilities;
 
 namespace PenteGame.Controllers
 {
@@ -29,7 +32,7 @@ namespace PenteGame.Controllers
     {
         static public BoardModel board = new BoardModel();
         private PieceModel newPiece;
-
+        bool usingTimer = true;
         int turn;
 
         // fun html stuff
@@ -56,7 +59,7 @@ namespace PenteGame.Controllers
         #endregion
 
         [HttpPost]
-        public ActionResult Start(string P1Name, string P1colorValue, string P2Name, string P2colorValue)
+        public ActionResult Start(string timerUse, int timerLength, string P1Name, string P1colorValue, string P2Name, string P2colorValue)
         {
             if (P1colorValue != null && P2colorValue != null)
             {
@@ -69,6 +72,9 @@ namespace PenteGame.Controllers
                     board.players.Add(player);
 
                     board.currentPlayer = board.players[0];
+
+                    board.timerUsed = timerUse != null;
+                    board.timerLength = timerLength;
 
                     return RedirectToAction("Board", board);
                 }
@@ -162,6 +168,53 @@ namespace PenteGame.Controllers
            return RedirectToAction("Board", board);
         }
 
+
+        public ActionResult SkipTurn()
+        {   ChangeTurn();
+            return RedirectToAction("Board", board);
+               }
+
+        public ActionResult ResetGame1()
+        {
+            ResetBoard();
+            ResetPlayers();
+            board.isGameOver = false;
+            return RedirectToAction("Board", board);
+        }
+
+        public ActionResult ResetGame2()
+        {
+            board = new BoardModel();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult ResetBoard()
+        {
+        for (int i = 0; i < 19; i++)
+            {
+                for (int j = 0; j < 19; j++)
+                {
+                    board.board[i, j].image = "/Content/Images/empty.png";
+                    board.board[i, j].colorValue = Color.Empty;
+                    board.board[i, j].ownedPlayer = null;
+                }
+
+            }
+        
+            return RedirectToAction("Board", board);
+        }
+        public ActionResult ResetPlayers()
+        {
+            foreach (var player in board.players)
+            {
+                player.captured = 0;
+                player.hasWon = false;
+                player.capturedPieces.Clear();
+            }
+            return RedirectToAction("Board", board);
+        }
+
+        
 
         // fun logic stuff
 
@@ -705,7 +758,7 @@ if (newPiece.y > 3 && board.board[newPiece.x, newPiece.y - 3].image == newPiece.
         }
 
 
-
+      
 
         int CountSideways(PieceModel piece)
         {
@@ -848,5 +901,12 @@ if (newPiece.y > 3 && board.board[newPiece.x, newPiece.y - 3].image == newPiece.
             count = count > countxY ? count : countxY;
             return count;
         }
+
+
+        //timer code
+    
+
     }
+
+
 }
