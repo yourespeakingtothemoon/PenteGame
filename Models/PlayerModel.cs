@@ -23,8 +23,6 @@ namespace PenteGame.Models
 
         public bool hasWon { get; set; } = false;
 
-        //public bool isTurn { get; set; }
-
         public PlayerModel()
         {
         }

@@ -1,18 +1,10 @@
 ﻿using PenteGame.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Runtime.Remoting.Messaging;
-using System.Web;
+
 using System.Drawing;
 using System.Web.Mvc;
-using System.Web.UI.HtmlControls;
-using System.Security.Cryptography.X509Certificates;
-using System.Diagnostics;
-using System.EnterpriseServices;
-using System.Web.UI.WebControls;
-using Microsoft.Ajax.Utilities;
+
 
 namespace PenteGame.Controllers
 {
