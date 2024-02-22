@@ -37,3 +37,9 @@ active, .collapsible:hover {
 .active:after {
     content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
+
+.PlayerInput
+{
+    margin-left: 10px;
+    margin-right: 10px;
+}
