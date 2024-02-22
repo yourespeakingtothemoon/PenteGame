@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Home Page";
-    
+
 }
 
 <head>
@@ -38,35 +38,24 @@
                         <br /><br />
                         <a href="https://www.pente.net/instructions.html" target="_blank">More Info on the Rules</a>
                         <br />
-                        <hr/>
+                        <hr />
                     </div>
                 </div>
             </div>
-            
+
         </p>
     </section>
 
-    <div class="row">
+    <div >
         <form action="Board/Start" controller="Board" method="Post">
-            <div>
-                <!--Timer Settings-->
+            <div class="PlayerInput">
+                <!-- Player 1 info -->
                 <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-                    <h2 id="gettingStartedTitle">Timer</h2>
-                   
-                                <label for="timerUse">Using Timer?</label>
-                                <input type="checkbox" name="timerUse" value="true" checked="checked"/>
-                          <br />
-                                <label for="timerLength">Timer Length:</label>
-                                <input type="number" name="timerLength" value="30" min="10" max="300" size="4" />
-                    
-                  
-                    </section>
-                    <!-- Player 1 info -->
-                    <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-                        <h2 id="gettingStartedTitle">Player 1</h2>
-                        <label for="P1Name">Player 1 Name:</label>
-                        <input type="text" name="P1Name" value="Player 1" />
-
+                    <h2 id="gettingStartedTitle">Player 1</h2>
+                    <label for="P1Name">Player 1 Name:</label>
+                    <input type="text" name="P1Name" value="Player 1" />
+                    <br /> <br />
+                    <div>
                         <label for="P1colorValue">Choose a color:</label>
                         <select name="P1colorValue">
                             <option value="white" selected="selected">White</option>
@@ -78,14 +67,16 @@
                             <option value="green">Green</option>
                             <option value="purple">Purple</option>
                         </select>
-                    </section>
-                    <br /><br />
-                    <!-- Player 2 Info -->
-                    <section class="col-md-4" aria-labelledby="librariesTitle">
-                        <h2 id="librariesTitle">Player 2</h2>
-                        <label for="P2Name">Player 2 Name:</label>
-                        <input type="text" name="P2Name" value="Player 2" />
-
+                    </div>
+                </section>
+                <br /><br />
+                <!-- Player 2 Info -->
+                <section class="col-md-4" aria-labelledby="librariesTitle">
+                    <h2 id="librariesTitle">Player 2</h2>
+                    <label for="P2Name">Player 2 Name:</label>
+                    <input type="text" name="P2Name" value="Player 2" />
+                    <br /> <br />
+                    <div>
                         <label for="P2colorValue">Choose a color:</label>
                         <select name="P2colorValue">
                             <option value="black" selected="selected">Black</option>
@@ -97,10 +88,11 @@
                             <option value="green">Green</option>
                             <option value="purple">Purple</option>
                         </select>
-                    </section>
-                    <br /><br />
-                    <button type="submit">Play Game</button>
-</div>
+                    </div>
+                </section>
+                <br /><br />
+                <button type="submit">Play Game</button>
+            </div>
         </form>
 
     </div>
