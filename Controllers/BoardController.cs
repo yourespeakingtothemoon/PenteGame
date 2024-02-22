@@ -41,26 +41,12 @@ namespace PenteGame.Controllers
             return View();
         }
 
-        #region Index_NON_WORKING
-        //[HttpPost]
-        //public ActionResult Index(PlayerModel player)
-        //{
-        //    board.players.Add(player);
-        //    return RedirectToAction("board", "board");
-        //}
-
-        //[HttpPost]
-        //public ActionResult Index(PlayerModel player, PlayerModel player2)
-        //{
-        //    board.players.Add(player);
-        //    board.players.Add(player2);
-        //    return RedirectToAction("board", "board");
-        //}
-        #endregion
-
         [HttpPost]
         public ActionResult Start(string timerUse, int timerLength, string P1Name, string P1colorValue, string P2Name, string P2colorValue)
         {
+            if (P1Name == string.Empty || P1Name == null) P1Name = "Player 1";
+            if (P2Name == string.Empty || P2Name == null) P2Name = "Player 2";
+
             if (P1colorValue != null && P2colorValue != null)
             {
                 if (P1colorValue != P2colorValue)
@@ -668,17 +654,9 @@ if (newPiece.y > 3 && board.board[newPiece.x, newPiece.y - 3].image == newPiece.
                 case "purple":
                     selected = Color.Purple;
                     break;
+                default:
+                    break;
             }
-
-            //if (colorValue == "black") selected = Color.Black;
-            //else if (colorValue == "white") selected = Color.White;
-            //else if (colorValue == "red") selected = Color.Red;
-            //else if (colorValue == "blue") selected = Color.Blue;
-            //else if (colorValue == "yellow") selected = Color.Yellow;
-            //else if (colorValue == "orange") selected = Color.Orange;
-            //else if (colorValue == "green") selected = Color.Green;
-            //else if (colorValue == "purple") selected = Color.Purple;
-
             return selected;
         }
 
